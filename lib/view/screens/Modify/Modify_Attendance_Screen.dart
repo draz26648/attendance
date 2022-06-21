@@ -1,6 +1,7 @@
 import 'package:fady/model/models/base_models/students.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../model/models/attend_model.dart';
 import '../../../shared/components/componants.dart';
@@ -21,10 +22,16 @@ class _AutoAttendanceDoneScreenState extends State<ModifyAttendanceScreen> {
 
   List<Student> attendances = [];
 
+  String dayName = DateFormat.EEEE().format(DateTime.now());
+  String yearDate = DateFormat.yM().format(DateTime.now());
+  int hour = DateTime.now().hour;
+
   @override
   void initState() {
     AttendCubit.get(context).loadAttendances(
-        day: 'sunday', school_year: '1/2022', start_time: '00:00:10');
+        day: dayName, school_year: yearDate, start_time: '$hour:00:00');
+
+    print(' $yearDate >>> $hour');
 
     super.initState();
   }
