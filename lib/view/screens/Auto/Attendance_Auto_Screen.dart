@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:async';
 
+import 'package:fady/view/screens/Auto/attend_cubit/attend_cubit.dart';
 import 'package:fady/view/screens/Auto/tensorflow.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tflite/tflite.dart';
@@ -18,6 +20,12 @@ class AttendanceAutoScreen extends StatefulWidget {
 
 class _AttendanceAutoScreenState extends State<AttendanceAutoScreen> {
   CalendarController controller = CalendarController();
+
+  @override
+  void initState() {
+    context.read<AttendCubit>().startAttend();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,16 +142,20 @@ class _AttendanceAutoScreenState extends State<AttendanceAutoScreen> {
             SizedBox(
               height: 20,
             ),
-            defaultButton(
-              function: () {
-                // navigateTo(context, AutoAttendanceDoneScreen());
-                navigateTo(context, TfliteModel());
+            BlocBuilder<AttendCubit, AttendState>(
+              builder: (context, state) {
+                return defaultButton(
+                  function: () async {
+                    await context.read<AttendCubit>().getAttendance();
+                    navigateTo(context, AutoAttendanceDoneScreen());
+                  },
+                  radius: 20,
+                  width: 200,
+                  text: 'Attendance',
+                  isUpperCase: true,
+                  background: Color.fromRGBO(22, 29, 111, 1),
+                );
               },
-              radius: 20,
-              width: 200,
-              text: 'Attendance',
-              isUpperCase: true,
-              background: Color.fromRGBO(22, 29, 111, 1),
             ),
           ]),
         ]),

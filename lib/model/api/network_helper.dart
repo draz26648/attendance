@@ -12,7 +12,7 @@ class NetworkHelper {
   factory NetworkHelper() {
     if (_instance == null) {
       _dio = Dio();
-      _dio.options.baseUrl = 'https://auto-attendence.000webhostapp.com/';
+      _dio.options.baseUrl = 'http://127.0.0.1:80/public_html/';
       _instance = NetworkHelper._internal();
     }
     return _instance;

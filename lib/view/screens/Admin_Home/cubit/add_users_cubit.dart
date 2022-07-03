@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:fady/model/repositories/add_user_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../model/models/add_user_model.dart';
@@ -49,20 +51,21 @@ class AddUsersCubit extends Cubit<AddUsersState> {
     @required String gender,
   }) async {
     emit(AddUsersLoading());
-    AddUser response = await AddUserRepo.addLecturer(
-      first_name: first_name,
-      last_name: last_name,
-      email: email,
-      password: password,
-      phone: phone,
-      address: address,
-      gender: gender,
-    );
+   try{
+     Response response = await AddUserRepo.addLecturer(
+       first_name: first_name,
+       last_name: last_name,
+       email: email,
+       password: password,
+       phone: phone,
+       address: address,
+       gender: gender,
+     );
+     emit(AddUsersSuccess(message: 'Success'));
+     Fluttertoast.showToast(msg: 'Success');
+   }catch(e){
+     emit(AddUsersError(error: e.toString()));
+   }
 
-    if (response.status == 'success') {
-      emit(AddUsersSuccess(message: response.status));
-    } else {
-      emit(AddUsersError(error: response.status));
-    }
   }
 }

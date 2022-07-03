@@ -32,4 +32,12 @@ abstract class AttendRepo {
     return await NetworkHelper()
         .post(url: 'modify.php', body: _body, model: AttendModel());
   }
+
+  static Future<dynamic> startAutoAttendance() async {
+    return await NetworkHelper().post(url: 'attendence.php');
+  }
+
+  static Future<dynamic> getAutoAttendance() async {
+    return await NetworkHelper().get(url: 'attendence.php');
+  }
 }

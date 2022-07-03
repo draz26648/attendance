@@ -100,7 +100,7 @@ class LoginAdminScreen extends StatelessWidget {
                                     isAdmin: true,
                                   );
                                   if (state is LoginSuccessState) {
-                                    Navigator.push(
+                                    Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => AdminHomeScreen(),

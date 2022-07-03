@@ -224,7 +224,7 @@ class _StudentScreenState extends State<StudentScreen> {
                           phone: int.parse(phone.text),
                           address: address.text,
                           gender: dropdownvalues,
-                          school_year: dropdownvalue);
+                          school_year: '2/2022');
                       if (state is AddUsersSuccess) {
                         Fluttertoast.showToast(msg: state.message);
                       } else if (state is AddUsersError) {
