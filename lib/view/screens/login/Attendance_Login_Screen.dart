@@ -107,7 +107,9 @@ class AttendanceLoginScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            AttendanceHomeScreen(),
+                                            AttendanceHomeScreen(
+                                          model: state.loginModel,
+                                        ),
                                       ),
                                     );
                                     Fluttertoast.showToast(

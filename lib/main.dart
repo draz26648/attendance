@@ -4,6 +4,7 @@ import 'package:fady/shared/components/constants.dart';
 
 import 'package:fady/shared/styles/themes.dart';
 import 'package:fady/view/screens/Admin_Home/cubit/add_users_cubit.dart';
+import 'package:fady/view/screens/Home/subject_cubit/subject_cubit.dart';
 import 'package:fady/view/screens/Modify/cubit/attend_cubit.dart';
 import 'package:fady/view/screens/UserProfile/cubit/profile_cubit.dart';
 import 'package:fady/view/screens/login/Admin/cubit/login_cubit.dart';
@@ -51,6 +52,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AttendCubit>(
           create: (context) => AttendCubit(),
+        ),
+        BlocProvider<SubjectCubit>(
+          create: (context) => SubjectCubit(),
         ),
       ],
       child: MaterialApp(

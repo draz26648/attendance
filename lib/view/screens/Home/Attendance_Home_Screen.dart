@@ -1,5 +1,7 @@
 import 'package:fady/model/models/login_model.dart';
+import 'package:fady/view/screens/Home/subject_cubit/subject_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../shared/components/componants.dart';
 import '../Auto/Attendance_Auto_Screen.dart';
@@ -8,12 +10,20 @@ import '../Report/Report_1.dart';
 import '../UserProfile/User_Profile_Screen.dart';
 
 class AttendanceHomeScreen extends StatefulWidget {
+  final LoginModel model;
+  AttendanceHomeScreen({@required this.model});
   @override
   _AttendanceHomeScreenState createState() => _AttendanceHomeScreenState();
 }
 
 class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
-  LoginModel _loginModel = LoginModel();
+  List<String> subjects = [];
+  @override
+  void initState() {
+    context.read<SubjectCubit>().getSubject(email: widget.model.email);
+    super.initState();
+  }
+
   // bool color =true;
   int _selectedIndex = -1;
   @override
@@ -34,7 +44,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Dr. ${_loginModel.first_name}' ?? '',
+              'Dr. ${widget.model.first_name}' ?? '',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 25,
@@ -42,7 +52,7 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
               ),
             ),
             Text(
-              _loginModel.email ?? '',
+              widget.model.email ?? '',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
@@ -94,70 +104,84 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Container(
-                        height: 150,
-                        child: ListView.separated(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) => Stack(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                  height: 200,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    color: _selectedIndex == index
-                                        ? Colors.blue
-                                        : Color.fromRGBO(255, 193, 79, 1),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                width: 200,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Operating System',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Color.fromRGBO(22, 29, 111, 1),
-                                          fontSize: 20,
-                                        ),
+                      child: BlocConsumer<SubjectCubit, SubjectState>(
+                        listener: (context, state) {
+                          if (state is SubjectLoaded) {
+                            state.subjects.forEach((element) {
+                              subjects.add(element);
+                            });
+                            setState(() {});
+                          }
+                        },
+                        builder: (context, state) {
+                          return Container(
+                            height: 150,
+                            child: ListView.separated(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => Stack(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedIndex = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 200,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                        color: _selectedIndex == index
+                                            ? Colors.blue
+                                            : Color.fromRGBO(255, 193, 79, 1),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
-                                      // SizedBox(
-                                      //   height: 5,
-                                      // ),
-                                      Text(
-                                        '3Cs',
-                                        style: TextStyle(
-                                          color: Color.fromRGBO(22, 29, 111, 1),
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    width: 200,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            subjects[index],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  22, 29, 111, 1),
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          // SizedBox(
+                                          //   height: 5,
+                                          // ),
+                                          Text(
+                                            '3Cs',
+                                            style: TextStyle(
+                                              color: Color.fromRGBO(
+                                                  22, 29, 111, 1),
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          separatorBuilder: (context, index) => SizedBox(
-                            width: 25,
-                          ),
-                          itemCount: 5,
-                        ),
+                              separatorBuilder: (context, index) => SizedBox(
+                                width: 25,
+                              ),
+                              itemCount: subjects.length,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
